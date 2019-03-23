@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Chat APP</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="text-center text-primary">Chat App</h1>
+        <form class="well">
+            <div class="form-group">
+                <textarea readonly id="taMsg" class="form-control" cols="30" rows="10"></textarea>
+            </div>
+
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-xs-10 col-sm-10 col-md-10 col-lg-10">
+                        <input type="text" id="txtMsg" class="form-control">
+                    </div>
+                    <div class="col-xs-2 col-sm-2 col-md-2 col-lg-2">
+                        <button id="btn" type="button" class="btn btn-large btn-block btn-primary">
+                            Send
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+<script>
+
+    $(document).ready(() => {
+        var chatterName = prompt("Enter you name : ");
+        var socket = io.connect("/");
+        socket.on("acknowledge", msg => {
+            alert("Server says : " + msg.message);
+        })
+
+        socket.on("serverMsg", (chatterName, msg) => {
+            var taMsg = document.getElementById("taMsg");
+            taMsg.value = taMsg.value += (`${chatterName} : ${msg}\n`);
+        })
+
+        document.getElementById("btn").onclick = () => {
+            var txtMsg = document.getElementById("txtMsg")
+            socket.emit("msgToServer", chatterName, txtMsg.value);
+            txtMsg.value = "";
+        }
+
+    })
+
+</script>
+
+</html>
