@@ -22,6 +22,6 @@ app.get("/", (req, res) => {
     res.sendFile(__dirname + "/public/socket-client.html");
 })
 
-server.listen(3000, () => {
+server.listen(port, () => {
     console.log("Socket server running on Port " + port);
 })
